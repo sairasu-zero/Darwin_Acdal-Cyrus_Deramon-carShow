@@ -1,0 +1,25 @@
+@baseUrl = http://localhost:5231
+
+### Create registration
+POST {{baseUrl}}/api/registrations
+Content-Type: application/json
+
+{
+  "participantName": "Ana Reyes",
+  "contactNumber": "09171234567",
+  "email": "ana.reyes@example.com",
+  "address": "Sorsogon City",
+  "carMakeModel": "Nissan GT-R",
+  "plateNumber": "CSV-2027-003",
+  "registrationType": "Competitor",
+  "amountPaid": 2500
+}
+
+### Get registrations
+GET {{baseUrl}}/api/registrations
+
+### Get registrations by type and status
+GET {{baseUrl}}/api/registrations?registrationType=1&registrationStatus=0
+
+### Get registration summary
+GET {{baseUrl}}/api/registrations/summary
