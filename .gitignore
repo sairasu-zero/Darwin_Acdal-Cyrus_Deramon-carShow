@@ -1,0 +1,17 @@
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Visual Studio
+.vs/
+
+# Node
+node_modules/
+dist/
