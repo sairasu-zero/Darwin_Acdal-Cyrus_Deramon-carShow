@@ -1,98 +1,70 @@
-<<<<<<< HEAD
-# Car Show Registration System — Frontend
 
-React + TypeScript dashboard for **Car Show 2027** (AutoVista Events, Sorsogon City Coliseum). Event staff use it to
-watch the KPI cards, search registrations, filter by type and status, and page through the master list.
-All data comes from the C# Vertical Slice API.
+# Car Show Registration System
 
-Course: Integrative Programming 2 / API Backend Development
-School: Computer Communication Development Institute — Sorsogon Campus
+A registration management system for AutoVista Events' Car Show 2027 at Sorsogon City Coliseum. It manages participant and vehicle registrations, registration types and statuses, registration fees, and payment status.
 
 ## Team
 
 | Member | Role |
-| --- | --- |
+|---|---|
 | Cyrus Deramon | Backend Developer |
 | Darwin Acdal | Frontend Developer |
 
-## Repository layout
+## Technology Stack
 
-```
-CarShow_Frontend_Acdal/
-├── frontend/                 React + TypeScript app (Vite, Tailwind, ESLint)
-│   ├── src/
-│   │   ├── api/              typed REST client and sample data
-│   │   ├── components/       KPI cards, filters, table, pagination, badges, states
-│   │   ├── hooks/            debounce and dashboard data hooks
-│   │   ├── pages/            RegistrationsPage layout
-│   │   ├── types.ts          API contract types
-│   └── utils/            currency, date and percentage formatting
-│   └── .env.development      API base URL and data source switch
-├── docs/                     documentation screenshots and reflection PDF
-└── README.md
-```
-
-## How to run
-
-1. Start the backend API (it listens on `http://localhost:5205`).
-2. In `frontend/`:
-
-```
-=======
-# Car Show Registration System
-
-A registration management system for **AutoVista Events’ Car Show 2027**, held at the Sorsogon City Coliseum over three days. It manages participant and vehicle registrations, registration types and statuses, registration fees, and payment status.
-
-## Team
-
-| Team member | Role | Responsibilities |
-|---|---|---|
-| `[Backend Developer name]` | Backend Developer | ASP.NET Core API, application features, validation, and SQLite persistence |
-| `[Frontend Developer name]` | Frontend Developer | React application, user interface, and API integration |
-
-Replace the bracketed names with the project team members’ names.
-
-## Technology stack
-
+### Backend
 - C# and .NET 10
 - ASP.NET Core Minimal API
 - Vertical Slice Architecture
-- Entity Framework Core and SQLite
+- Entity Framework Core
+- SQLite
 - FluentValidation
-- Scalar API documentation
-- React (frontend)
-- Git and GitHub
+- Scalar API Documentation
 
-## Project structure
+### Frontend
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- ESLint
+
+## Project Structure
 
 ```text
-car-show-registration/
+Darwin_Acdal-Cyrus_Deramon-carShow/
 ├── Backend/
 │   ├── Verticalslice/
-│   │   ├── Api/             # Minimal API and HTTP endpoints
-│   │   ├── Application/     # Registration features and validation
-│   │   ├── Domain/          # Registration entity and enums
-│   │   └── Infrastructure/  # EF Core, SQLite, migrations, and seed data
+│   │   ├── Api/
+│   │   ├── Application/
+│   │   ├── Domain/
+│   │   └── Infrastructure/
 │   ├── Verticalslice.sln
 │   ├── Api.http
-│   └── carshow.db           # Persistent SQLite database (when present)
-├── Frontend/                # React application
+│   └── carshow.db
+├── frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── types.ts
+│   │   └── utils/
+│   └── README.md
 ├── docs/
-│   └── screenshots/
 ├── .gitignore
 └── README.md
 ```
 
 ## Prerequisites
 
-Install the following before starting:
+Install the following:
 
 1. [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-2. [Node.js LTS and npm](https://nodejs.org/) (for the frontend)
+2. [Node.js LTS and npm](https://nodejs.org/)
 3. [Git](https://git-scm.com/downloads)
-4. A code editor such as Visual Studio 2026 or Visual Studio Code
+4. Visual Studio 2026 or Visual Studio Code
 
-Check your installations in a terminal:
+Verify your installations:
 
 ```powershell
 dotnet --version
@@ -101,108 +73,121 @@ npm --version
 git --version
 ```
 
-## Get the project
-
-Clone the repository, then enter its root folder:
+## Clone the Repository
 
 ```powershell
-git clone https://github.com/<owner>/<repository>.git
-cd <repository>
+git clone https://github.com/sairasu-zero/Darwin_Acdal-Cyrus_Deramon-carShow.git
+cd Darwin_Acdal-Cyrus_Deramon-carShow
 ```
 
-Replace the repository URL placeholder with the project’s GitHub URL. The current project repository is `https://github.com/sairasu-zero/Darwin_Acdal-Cyrus_Deramon-carShow`.
+## Backend Setup
 
-## Set up the database
-
-The API uses Entity Framework Core with SQLite. The persistent database file is `Backend/carshow.db`; it is resolved relative to the backend solution, not the terminal’s current directory. The API applies pending migrations at startup and does not recreate the database on each run.
-
-From the `Backend` directory, install the EF Core command-line tool if needed and apply the existing migration:
-
-```powershell
-cd Backend
-dotnet tool install --global dotnet-ef --version 10.0.15
-dotnet ef database update --project Verticalslice\Infrastructure\Infrastructure.csproj --startup-project Verticalslice\Api\Api.csproj
-```
-
-If `dotnet-ef` is already installed, skip the install command. To create a migration after making a model change, use a new migration name (do not add `InitialCreate` again):
-
-```powershell
-dotnet ef migrations add <MigrationName> --project Verticalslice\Infrastructure\Infrastructure.csproj --startup-project Verticalslice\Api\Api.csproj --output-dir Persistence\Migrations
-dotnet ef database update --project Verticalslice\Infrastructure\Infrastructure.csproj --startup-project Verticalslice\Api\Api.csproj
-```
-
-## Run the backend
-
-From the repository root:
+Restore the backend dependencies:
 
 ```powershell
 cd Backend
 dotnet restore Verticalslice.sln
+```
+
+### Database
+
+The backend uses Entity Framework Core and SQLite.
+
+Database file:
+
+```text
+Backend/carshow.db
+```
+
+To install the EF Core command-line tool if needed:
+
+```powershell
+dotnet tool install --global dotnet-ef --version 10.0.15
+```
+
+Apply migrations:
+
+```powershell
+dotnet ef database update --project Verticalslice\Infrastructure\Infrastructure.csproj --startup-project Verticalslice\Api\Api.csproj
+```
+
+### Run the Backend API
+
+```powershell
 dotnet run --project Verticalslice\Api\Api.csproj --launch-profile http
 ```
 
-The API is available at `http://localhost:5231`. CORS permits the React development origin `http://localhost:5173`.
+Check the actual listening URL in the API startup output.
 
-## Scalar API documentation
+### Scalar API Documentation
 
-With the backend running, open:
+When the API is running, open the corresponding local URL:
 
-- Scalar: <http://localhost:5231/scalar/v1>
-- OpenAPI document: <http://localhost:5231/openapi/v1.json>
+```text
+/scalar/v1
+/openapi/v1.json
+```
 
-## API endpoints
+## API Endpoints
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| `POST` | `/api/registrations` | Create a registration |
-| `GET` | `/api/registrations` | List registrations; supports `participantName`, `type`, `status`, `page`, and `pageSize` query parameters |
-| `GET` | `/api/registrations/{id:guid}` | Get a registration by GUID |
-| `GET` | `/api/registrations/summary` | Get registration and payment summary KPIs |
+| POST | `/api/registrations` | Create a registration |
+| GET | `/api/registrations` | List registrations with search, filters and pagination |
+| GET | `/api/registrations/{id:guid}` | Get registration by ID |
+| GET | `/api/registrations/summary` | Get registration and payment KPI summary |
 
-Example create request (the server generates the registration number, date, fee, initial status, and payment status):
+Supported list query parameters include:
 
-```json
-{
-  "participantName": "Juan Dela Cruz",
-  "contactNumber": "09171234567",
-  "email": "juan@example.com",
-  "address": "123 Rizal St., Naga City",
-  "carMakeModel": "Toyota Supra MK4",
-  "plateNumber": "ABC 1234",
-  "registrationType": "Competitor",
-  "amountPaid": 1000.00
-}
-```
+- `participantName`
+- `type`
+- `status`
+- `page`
+- `pageSize`
 
-## Run the frontend
+## Frontend Setup
 
-The `Frontend` folder is reserved for the React application. Once its developer has added the React project and `package.json`, open a second terminal and run:
+Open a separate terminal at the repository root:
 
 ```powershell
-cd Frontend
->>>>>>> origin/main
+cd frontend
 npm install
 npm run dev
 ```
 
-<<<<<<< HEAD
-3. Open `http://localhost:5173`.
+Open the frontend development URL shown by Vite, normally:
 
-## Dashboard behaviour
+```text
+http://localhost:5173
+```
 
-- KPI cards read `GET /api/registrations/summary`; they never add up the rows on screen.
-- Search is debounced at 400 ms and sent to the API as `participantName`; type and status are sent as
-  `type` and `status`. Any filter change returns to page 1.
-- Paging sends `page` and `pageSize`, shows the `Showing x–y of N` summary and disables buttons while
-  loading or at the first/last page.
-- Loading, empty and error states are always visible; the error state has a Try again button.
-- The base URL is read from `VITE_API_BASE_URL` in `frontend/.env.development`.
-=======
-The current API CORS policy allows `http://localhost:5173`; configure the frontend development server to use that address. If the React project has not yet been added, these npm commands will not work until its `package.json` is available.
+### Frontend Features
 
-## GitHub repository
+- Registration KPI cards
+- Registration search
+- Registration type and status filters
+- Paginated registration table
+- Registration and payment status badges
+- Loading, empty and error states
+- API integration using a typed REST client
 
-Repository URL: `https://github.com/<owner>/<repository>.git`
+The frontend reads its API configuration from:
 
-Current project repository: <https://github.com/sairasu-zero/Darwin_Acdal-Cyrus_Deramon-carShow>
->>>>>>> origin/main
+```text
+frontend/.env.development
+```
+
+Configure `VITE_API_BASE_URL` to match the actual backend API address.
+
+## Dashboard Behaviour
+
+- KPI cards retrieve data from the registration summary endpoint.
+- Search is debounced.
+- Type and status filters are sent to the API.
+- Filter changes return pagination to page 1.
+- Loading, empty and error states are displayed.
+- Pagination supports a page-size selector.
+
+## GitHub Repository
+
+https://github.com/sairasu-zero/Darwin_Acdal-Cyrus_Deramon-carShow

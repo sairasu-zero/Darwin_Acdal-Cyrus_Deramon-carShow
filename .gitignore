@@ -1,37 +1,27 @@
-<<<<<<< HEAD
+
+# Node.js / React / Vite
 node_modules/
 dist/
+dist-ssr/
 .vite/
 *.local
-.env.local
-.vs/
-bin/
-obj/
-.DS_Store
-frontend/.env.development
-=======
-# .NET build output and user-specific files
+
+# .NET build output
 **/bin/
 **/obj/
 .vs/
 *.user
 *.suo
 
-# Frontend dependencies and build output
-node_modules/
-dist/
-
-# SQLite transient files; keep Backend/carshow.db available for submission
-*.db-shm
-*.db-wal
-*.db-journal
-
-# Local environment and secret configuration
+# Environment configuration
 .env
 .env.*
 !.env.example
+!.env.*.example
 **/appsettings.Local.json
 **/appsettings.*.local.json
+
+# Secrets and certificates
 **/secrets.json
 **/secrets.*.json
 **/secrets/
@@ -39,4 +29,12 @@ dist/
 *.p12
 *.key
 *.pem
->>>>>>> origin/main
+
+# SQLite temporary files
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Operating system
+.DS_Store
+Thumbs.db
