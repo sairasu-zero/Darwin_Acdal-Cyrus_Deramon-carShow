@@ -5,7 +5,7 @@ import type {
   RegistrationSummary,
 } from '../types';
 
-export const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5205').replace(/\/+$/, '');
+export const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5231').replace(/\/+$/, '');
 
 async function readJson<T>(response: Response): Promise<T | null> {
   try {

@@ -18,7 +18,7 @@ Vite + React + TypeScript + Tailwind CSS dashboard for the Car Show Registration
 `frontend/.env.development`:
 
 ```
-VITE_API_BASE_URL=http://localhost:5220
+VITE_API_BASE_URL=http://localhost:5231
 VITE_DATA_SOURCE=api
 ```
 
@@ -30,7 +30,7 @@ The dashboard reads through `src/api/index.ts`, which exports `getRegistrations`
 Both implementations return the same typed shapes, so no component changes are needed.
 
 - **Real API:** set `VITE_DATA_SOURCE=api` (default) in `.env.development`. Requests go to
-  `src/api/registrationsApi.ts` and reach `http://localhost:5220/api/registrations`.
+  `src/api/registrationsApi.ts` and reach `http://localhost:5231/api/registrations`.
 - **Sample data:** set `VITE_DATA_SOURCE=sample`, then restart `npm run dev`. Requests go to
   `src/api/sample-data.ts`, which holds 25 registrations and filters, pages and totals them in the browser.
 
@@ -79,4 +79,5 @@ src/
 - Table: registration number, date, participant, car, type, status, fee, paid, payment badge.
 - Pagination: prev/next, page numbers, page-size selector, `Showing x–y of N`.
 - States: loading message with skeleton rows, empty state with clear filters, error state with try again.
+
 
