@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using CarShowRegistration.Api.Endpoints.Registrations;
 using CarShowRegistration.Application;
@@ -11,13 +10,12 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false)));
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
-    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+    policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod()));
 
-var backendDirectory = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", ".."));
-var databasePath = Path.Combine(backendDirectory, "carshow.db");
+var databasePath = DatabaseLocation.GetDatabasePath(builder.Environment.ContentRootPath);
 builder.Configuration["ConnectionStrings:CarShowDatabase"] = $"Data Source={databasePath}";
 
 builder.Services.AddOpenApi();
@@ -35,16 +33,16 @@ app.MapRegistrationEndpoints();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await context.Database.EnsureCreatedAsync();
-
+    var connection = context.Database.GetDbConnection();
     await context.Database.OpenConnectionAsync();
-    var connection = (SqliteConnection)context.Database.GetDbConnection();
     await using (var columnCommand = connection.CreateCommand())
     {
+        columnCommand.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'Registrations';";
+        var hasRegistrations = Convert.ToInt64(await columnCommand.ExecuteScalarAsync()) > 0;
         columnCommand.CommandText = "SELECT COUNT(*) FROM pragma_table_info('Registrations') WHERE name = 'RegistrationNumber';";
         var hasNewSchema = Convert.ToInt64(await columnCommand.ExecuteScalarAsync()) > 0;
 
-        if (!hasNewSchema)
+        if (hasRegistrations && !hasNewSchema)
         {
             await using var migration = connection.CreateCommand();
             migration.CommandText = @"
@@ -57,7 +55,7 @@ CREATE TABLE Registrations_New (
     ContactNumber TEXT NOT NULL,
     Email TEXT NOT NULL,
     Address TEXT NOT NULL,
-    CarMakeModel TEXT NOT NOT NULL,
+    CarMakeModel TEXT NOT NULL,
     PlateNumber TEXT NOT NULL,
     RegistrationType TEXT NOT NULL,
     Status TEXT NOT NULL,
@@ -88,13 +86,35 @@ CREATE INDEX IX_Registrations_Email ON Registrations(Email);
 CREATE INDEX IX_Registrations_RegistrationType ON Registrations(RegistrationType);
 CREATE INDEX IX_Registrations_Status ON Registrations(Status);
 COMMIT;";
-            migration.CommandText = migration.CommandText.Replace("CarMakeModel TEXT NOT NOT NULL", "CarMakeModel TEXT NOT NULL");
             await migration.ExecuteNonQueryAsync();
         }
     }
     await context.Database.CloseConnectionAsync();
 
+    await context.Database.MigrateAsync();
     await RegistrationSeeder.SeedAsync(context);
+
+    await context.Database.OpenConnectionAsync();
+    await using (var sequenceCommand = connection.CreateCommand())
+    {
+        sequenceCommand.CommandText = @"
+INSERT OR IGNORE INTO RegistrationNumberSequences (Id, LastNumber)
+SELECT 1, COALESCE(MAX(CAST(substr(RegistrationNumber, 6) AS INTEGER)), 0)
+FROM Registrations
+WHERE RegistrationNumber GLOB 'CS27-[0-9]*';
+UPDATE RegistrationNumberSequences
+SET LastNumber = MAX(
+    LastNumber,
+    COALESCE((
+        SELECT MAX(CAST(substr(RegistrationNumber, 6) AS INTEGER))
+        FROM Registrations
+        WHERE RegistrationNumber GLOB 'CS27-[0-9]*'
+    ), 0)
+)
+WHERE Id = 1;";
+        await sequenceCommand.ExecuteNonQueryAsync();
+    }
+    await context.Database.CloseConnectionAsync();
 }
 
 app.Run();

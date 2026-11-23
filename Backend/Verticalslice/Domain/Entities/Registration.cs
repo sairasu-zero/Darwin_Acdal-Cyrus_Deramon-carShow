@@ -15,6 +15,15 @@ public sealed class Registration
     public RegistrationStatus Status { get; set; }
     public decimal RegistrationFee { get; set; }
     public decimal AmountPaid { get; set; }
+
+    public static decimal FeeFor(RegistrationType registrationType) => registrationType switch
+    {
+        RegistrationType.Exhibitor => 1500m,
+        RegistrationType.Competitor => 2500m,
+        RegistrationType.VIP => 5000m,
+        _ => throw new ArgumentOutOfRangeException(nameof(registrationType))
+    };
+
     public PaymentStatus PaymentStatus => AmountPaid <= 0
         ? PaymentStatus.Unpaid
         : AmountPaid < RegistrationFee

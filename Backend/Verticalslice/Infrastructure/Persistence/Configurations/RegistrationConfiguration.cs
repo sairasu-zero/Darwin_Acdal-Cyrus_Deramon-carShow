@@ -14,7 +14,7 @@ public sealed class RegistrationConfiguration : IEntityTypeConfiguration<Registr
         builder.Property(x => x.Email).HasMaxLength(200).IsRequired();
         builder.Property(x => x.Address).HasMaxLength(300).IsRequired();
         builder.Property(x => x.CarMakeModel).HasMaxLength(100).IsRequired();
-        builder.Property(x => x.PlateNumber).HasMaxLength(15).IsRequired();
+        builder.Property(x => x.PlateNumber).HasMaxLength(15).UseCollation("NOCASE").IsRequired();
         builder.Property(x => x.RegistrationFee).HasPrecision(18, 2).IsRequired();
         builder.Property(x => x.AmountPaid).HasPrecision(18, 2).IsRequired();
         builder.Property(x => x.RegistrationType).HasConversion<string>().HasMaxLength(20);

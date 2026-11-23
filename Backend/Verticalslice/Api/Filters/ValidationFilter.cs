@@ -1,4 +1,7 @@
+using CarShowRegistration.Api.Extensions;
+using CarShowRegistration.Application.Common;
 using FluentValidation;
+
 namespace CarShowRegistration.Api.Filters;
 public sealed class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
 {
@@ -6,7 +9,11 @@ public sealed class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilt
     {
         var argument = context.Arguments.OfType<T>().FirstOrDefault();
         if (argument is null) return await next(context);
-        var result = await validator.ValidateAsync(argument, context.HttpContext.RequestAborted);
-        return result.IsValid ? await next(context) : Results.ValidationProblem(result.ToDictionary());
+        var validation = await validator.ValidateAsync(argument, context.HttpContext.RequestAborted);
+        if (validation.IsValid)
+            return await next(context);
+
+        var result = Result<object>.Failure(ResultError.Validation(validation.ToDictionary()));
+        return result.ToHttpResult(_ => Results.Ok());
     }
 }

@@ -5,7 +5,14 @@ namespace CarShowRegistration.Application.Features.Registrations;
 public interface IRegistrationRepository
 {
     Task<Registration?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<Registration>> GetAsync(RegistrationType? type, RegistrationStatus? status, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<Registration>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task AddAsync(Registration registration, CancellationToken cancellationToken = default);
+    Task<(IReadOnlyList<Registration> Items, int TotalCount)> GetAsync(
+        string? participantName,
+        RegistrationType? type,
+        RegistrationStatus? status,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+    Task<RegistrationSummaryData> GetSummaryAsync(CancellationToken cancellationToken = default);
+    Task<bool> PlateNumberExistsAsync(string plateNumber, CancellationToken cancellationToken = default);
+    Task<bool> AddAsync(Registration registration, CancellationToken cancellationToken = default);
 }
