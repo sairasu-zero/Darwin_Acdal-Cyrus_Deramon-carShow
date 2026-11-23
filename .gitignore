@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vite/
+*.local
+.env.local
+.vs/
+bin/
+obj/
+.DS_Store
+frontend/.env.development
