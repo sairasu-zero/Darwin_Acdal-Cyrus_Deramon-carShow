@@ -1,17 +1,29 @@
-# .NET
+# .NET build output and user-specific files
 **/bin/
 **/obj/
+.vs/
 *.user
 *.suo
 
-# SQLite
-*.db
-*.db-shm
-*.db-wal
-
-# Visual Studio
-.vs/
-
-# Node
+# Frontend dependencies and build output
 node_modules/
 dist/
+
+# SQLite transient files; keep Backend/carshow.db available for submission
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Local environment and secret configuration
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.local.json
+**/secrets.json
+**/secrets.*.json
+**/secrets/
+*.pfx
+*.p12
+*.key
+*.pem
